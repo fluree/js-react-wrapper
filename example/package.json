@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@fluree/js-react-wrapper": "file:..",
+    "@material-ui/core": "^4.9.10",
     "react": "file:../node_modules/react",
     "react-dom": "file:../node_modules/react-dom",
-    "react-scripts": "file:../node_modules/react-scripts",
-    "@fluree/js-react-wrapper": "file:.."
+    "react-scripts": "file:../node_modules/react-scripts"
   },
   "scripts": {
     "start": "node ../node_modules/react-scripts/bin/react-scripts.js start",
