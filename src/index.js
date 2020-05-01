@@ -666,17 +666,18 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
     render() {
       const result = this.state.result;
       const data = {
+        query: this.query, // provide query to help debugging if using vars or a query function
         id: this.id,
         result: result,
         forceUpdate: function () {
           if (this.query && this.isValidQuery)
             registerQuery(this.conn, this.id, this.query, this.opts, true);
         }.bind(this),
-        deltas: this.state.deltas,
         error: this.state.error,
         warning: this.state.warning,
         status: this.state.status,
         loading: !(this.state.status === "loaded" || this.state.status === "error"),
+        // helper get function to get nested results without raising an exception
         get: function get(keySeq, defaultValue) {
           keySeq = Array.isArray(keySeq) ? keySeq : [keySeq];
           let obj = result;
@@ -691,7 +692,7 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
         }
       };
 
-      const childProps = Object.assign({}, this.props, { data: data, invoke: this.conn.invoke });
+      const childProps = Object.assign({}, this.props, { data: data });
 
       return React.createElement(WrappedComponent, childProps);
     }

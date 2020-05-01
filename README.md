@@ -76,6 +76,110 @@ export default App;
 
 ```
 
+## Query types
+
+Queries passed to flureeQL can either be:
+
+1. A standard query as in the example above
+2. A query with variables that can be brought in dynamically by the mounted component
+3. A function that is passed the component's props and context and must return a valid query
+
+
+### Standard queries
+
+```jsx
+
+// standard React component (knows nothing of Fluree)
+function FavoriteColor({ data }) {
+  // Fluree injects `data` object into props, query result is at data.result
+  return (
+    <p>Favorite color for {data.result.username} is: {data.result.favoriteColor}</p>
+  );
+}
+
+// wrap standard React component with Fluree query, results will be injected
+// 'basic' style query shown below
+const FavoriteColorFluree = flureeQL(
+  {
+    selectOne: ["username", "favoriteColor"],
+    from: ["_user/username", "bob@example.com"]
+  }
+)(FavoriteColor);
+
+// identical query as above, but with 'analytical' query style
+const FavoriteColorFlureeAlt = flureeQL(
+  {
+    selectOne: {"?s": ["username", "favoriteColor"]},
+    where: [["?s", "_user/username", "bob@example.com"]]
+  }
+)(FavoriteColor);
+
+```
+
+### Queries with variables
+
+Queries that will be used in multiple contexts should use 
+[query variables](https://docs.flur.ee/docs/query/analytical-query#variables), 
+allowing the query to be reusable (this also makes query parsing slightly more efficient).
+
+```jsx
+
+// for any query vars that are null, The React component's props will 
+// be examined to see if there is a property with the same name as the missing
+// var (minus the leading '?') and it will be substituted.
+const FavoriteColorFluree = flureeQL(
+  {
+    selectOne: {"?s": ["username", "favoriteColor"]},
+    where: [["?s", "_user/username", "?username"]], // ?username here is a query variable
+    vars: {"?username": null} // note ?username is null, will look at React props for presence of 'username'
+  }
+)(FavoriteColor);
+
+// this parent component will display our Fluree-enabled component
+function ParentComponent() {
+  return (
+    <div>
+      <p>Two users, same reusable component with different username property:</p>
+      <FavoriteColorFluree username="bob@example.com"/>
+      <FavoriteColorFluree username="alice@example.com"/>
+    <div>
+  );
+}
+
+```
+
+### Queries using a function
+
+The third query alternative is to use a function to return a query instead of specifying it directly.
+The function will be called with two arguments, the React props and context 
+(just like the constructor function of a React.Component).
+
+```jsx
+// Same example as above, but query written as a function
+
+function faveColorQuery(props, context) {
+  // return any valid query
+  return   {
+    selectOne: {"?s": ["username", "favoriteColor"]},
+    where: [["?s", "_user/username", props.username]] // we can embed the value directly in the query
+  }
+}
+
+const FavoriteColorFluree = flureeQL(faveColorQuery)(FavoriteColor);
+
+// this parent component will display our Fluree-enabled component
+function ParentComponent() {
+  return (
+    <div>
+      <p>Two users, same reusable component with different username property:</p>
+      <FavoriteColorFluree username="bob@example.com"/>
+      <FavoriteColorFluree username="alice@example.com"/>
+    <div>
+  );
+}
+```
+
+
 ## License
 
 MIT © [Fluree PBC](https://github.com/fluree)
