@@ -472,11 +472,6 @@ function ReactConnect(config) {
         let component = componentIdx[id];
 
         // option {ignoreForceTime: true} will cause this query to not be affected by forceTime()
-
-        console.log("Time travel component: " + id + " opts are:")
-        console.log(component.opts)
-
-
         if (component.opts.ignoreForceTime != true) {
           component.opts.forceTime = t2;
           registerQuery(component.conn, component.id, component.query, component.opts);
@@ -575,6 +570,19 @@ function getMissingVars(flurQL) {
   return vars.filter(x => flurQL.vars[x] === null).map(x => x.substr(1));
 }
 
+// The query.vars may get manipulated, make sure we have a proper
+// copy for each instantiation
+function deepCopyQuery(query) {
+  if (query === null) {
+    return null;
+  } else {
+    var copiedQuery = Object.assign({}, query); // shallow copy
+    var copiedVars = copiedQuery.vars ? Object.assign({}, copiedQuery.vars) : null;
+    copiedQuery.vars = copiedVars;
+    return copiedQuery;
+  }
+}
+
 function wrapComponent(WrappedComponent, query, opts = {}) {
   const flurQLDisplayName = `Fluree(${getDisplayName(WrappedComponent)})`;
 
@@ -590,14 +598,14 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
       this.conn = context.conn;
       this.id = nextId();
       this.queryIsFunction = (typeof query === "function")
-      this.query = this.queryIsFunction ? query(props, this.context) : query;
-      this.isValidQuery = this.query && queryIsValid(this.query);
-      this.missingVars = this.isValidQuery && this.query.vars ? getMissingVars(this.query) : []; // list of vars we need to check props for
+      this.queryParsed = deepCopyQuery(this.queryIsFunction ? query(props, this.context) : query);
+      this.isValidQuery = this.queryParsed && queryIsValid(this.queryParsed);
+      this.missingVars = this.isValidQuery && this.queryParsed.vars ? getMissingVars(this.queryParsed) : []; // list of vars we need to check props for
       this.opts = opts
       this.state = {
-        result: this.query.selectOne ? null : [], // default query result [] unless selectOne query
-        error: this.query && !this.isValidQuery ? { status: 400, message: "Query is not valid: " + JSON.stringify(this.query) } : null,
-        warning: this.query ? null : "No query yet, waiting...",
+        result: this.queryParsed.selectOne ? null : [], // default query result [] unless selectOne query
+        error: this.queryParsed && !this.isValidQuery ? { status: 400, message: "Query is not valid: " + JSON.stringify(this.queryParsed) } : null,
+        warning: this.queryParsed ? null : "No query yet, waiting...",
         status: "pending",
         loading: true
       };
@@ -610,23 +618,20 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
       if (this.conn.forceTimeTo) {
         this.opts.forceTime = this.conn.forceTimeTo;
       }
-
-
     }
 
     componentDidMount() {
       // get any missing vars from props and update this.opts with them
       if (this.missingVars.length !== 0) {
         this.missingVars.forEach((v) => {
-          this.query.vars["?" + v] = this.props[v];
+          this.queryParsed.vars["?" + v] = this.props[v];
         });
       }
-
       // register this component for later re-render calling, etc.
       componentIdx[this.id] = this;
 
-      if (this.query && this.isValidQuery) {
-        registerQuery(this.conn, this.id, this.query, this.opts);
+      if (this.queryParsed && this.isValidQuery) {
+        registerQuery(this.conn, this.id, this.queryParsed, this.opts);
       }
     }
 
@@ -637,11 +642,10 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
 
     componentDidUpdate(prevProps, prevState) {
       if (this.queryIsFunction) {
-        const newQuery = query(this.props, this.context);
-        this.query = newQuery;
-        this.isValidQuery = queryIsValid(this.query);
-        if (this.query && this.isValidQuery) {
-          registerQuery(this.conn, this.id, this.query, this.opts);
+        this.queryParsed = deepCopyQuery(query(this.props, this.context));
+        this.isValidQuery = queryIsValid(this.queryParsed);
+        if (this.queryParsed && this.isValidQuery) {
+          registerQuery(this.conn, this.id, this.queryParsed, this.opts);
         }
       } else {
         // check if any of the missing vars changed with the new props
@@ -656,9 +660,9 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
 
         if (didMissingVarsChange === true) {
           this.missingVars.forEach((v) => {
-            this.query.vars["?" + v] = this.props[v];
+            this.queryParsed.vars["?" + v] = this.props[v];
           });
-          registerQuery(this.conn, this.id, this.query, this.opts);
+          registerQuery(this.conn, this.id, this.queryParsed, this.opts);
         }
       }
     }
@@ -666,12 +670,12 @@ function wrapComponent(WrappedComponent, query, opts = {}) {
     render() {
       const result = this.state.result;
       const data = {
-        query: this.query, // provide query to help debugging if using vars or a query function
+        query: this.queryParsed, // provide query to help debugging if using vars or a query function
         id: this.id,
         result: result,
         forceUpdate: function () {
-          if (this.query && this.isValidQuery)
-            registerQuery(this.conn, this.id, this.query, this.opts, true);
+          if (this.queryParsed && this.isValidQuery)
+            registerQuery(this.conn, this.id, this.queryParsed, this.opts, true);
         }.bind(this),
         error: this.state.error,
         warning: this.state.warning,
@@ -708,9 +712,5 @@ function flureeQL(query, opts) {
   }
 }
 
-// export const ExampleComponent = ({ text }) => {
-//   return <div className={styles.test}>Example Component: {text}</div>
-// }
 
-export { flureeQL, registerQuery, unregisterQuery, ReactConnect, FlureeProvider };
-
+export { ReactConnect, FlureeProvider, flureeQL };
