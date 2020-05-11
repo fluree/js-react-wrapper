@@ -282,7 +282,7 @@ function queryIsValid(query) {
   if (
     query !== null
     && typeof query === "object"
-    && (query.select || query.selectOne)
+    && (query.select || query.selectOne || query.history || query.block)
     && (query.vars === undefined
       || typeof query.vars === "object") // null or object
   ) {
