@@ -474,7 +474,7 @@ function ReactConnect(config) {
         // option {ignoreForceTime: true} will cause this query to not be affected by forceTime()
         if (component.opts.ignoreForceTime != true) {
           component.opts.forceTime = t2;
-          registerQuery(component.conn, component.id, component.query, component.opts);
+          registerQuery(component.conn, component.id, component.queryParsed, component.opts);
         }
       })
     },
