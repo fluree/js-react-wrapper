@@ -1,6 +1,6 @@
 {
-  "name": "@fluree/js-react-wrapper",
-  "version": "0.1.5",
+  "name": "@fluree/react-wrapper",
+  "version": "0.13.10",
   "description": "Fluree wrapper for React apps",
   "author": "Fluree PBC",
   "license": "MIT",

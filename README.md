@@ -1,13 +1,13 @@
-# @fluree/js-react-wrapper
+# @fluree/react-wrapper
 
 > Fluree wrapper for React apps
 
-[![NPM](https://img.shields.io/npm/v/@fluree/js-react-wrapper.svg)](https://www.npmjs.com/package/@fluree/js-react-wrapper) 
+[![NPM](https://img.shields.io/npm/v/@fluree/react-wrapper.svg)](https://www.npmjs.com/package/@fluree/react-wrapper) 
 
 ## Install
 
 ```bash
-npm install --save @fluree/js-react-wrapper
+npm install --save @fluree/react-wrapper
 ```
 
 ## Usage
