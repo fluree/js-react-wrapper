@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FlureeClient, FlureeProvider, flureeQL } from '@fluree/js-react-wrapper'
+import { FlureeConnect, FlureeProvider, flureeQL } from '@fluree/js-react-wrapper'
 import TimeTravel from './TimeTravel'
 // import '@fluree/js-react-wrapper/dist/index.css'
 
@@ -8,7 +8,7 @@ const scott = "a603e772faec02056d4ec3318187487d62ec46647c0cba7320c7f2a79bed2615"
 const brian = "509a01fe94a32466d7d3ad378297307f897a7d385a219d79725994ce06041896";
 const antonio = "c9cdec8fb328a823ddfbe37115ec448109d86bab594305c8066e7633e5b63ba6";
 
-const myconn = new FlureeClient({
+const myconn = new FlureeConnect({
   servers: "http://localhost:8090",
   ledger: "peter/demo",
   // workerUrl: "js-react-wrapper/flureeworker.js",
@@ -16,46 +16,6 @@ const myconn = new FlureeClient({
   // private: brian
 });
 
-// function Invoice({ invoice }) {
-//   return (
-//     <tr>
-//       <td>{invoice.id}</td>
-//       <td>{invoice.buyer.name}</td>
-//       <td>{invoice.seller.name}</td>
-//       <td>{JSON.stringify(invoice.items)}</td>
-//     </tr>
-//   );
-// }
-
-// function AllInvoices({ data }) {
-//   const invoiceData = data.result;
-//   const invoiceItems = invoiceData.map(
-//     invoice => <Invoice invoice={invoice}></Invoice>
-//   )
-//   return (
-//     <table>
-//       <thead>
-//         <tr>
-//           <th>Invoice ID</th>
-//           <th>Invoice Buyer</th>
-//           <th>Invoice Seller</th>
-//           <th>Invoice Items</th>
-//           <th>Received?</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         {invoiceItems}
-//       </tbody>
-//     </table>
-//   );
-// }
-
-// const AllInvoicesFluree = flureeQL({
-//   "select": [
-//     "*"
-//   ],
-//   "from": "group"
-// })(AllInvoices);
 
 function AllGroups({data}) {
   const groupItems = data.result;

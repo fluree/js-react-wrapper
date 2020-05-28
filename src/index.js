@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import hoistNonReactStatics from 'hoist-non-react-statics';
-import FlureeClient from './FlureeClient';
+import FlureeConnect from './FlureeConnect';
 import { queryIsValid, getMissingVars, deepCopyQuery } from './util';
 
 // id counter to be used for various things that require unique identifiers
@@ -181,6 +181,6 @@ function flureeQL(query, opts) {
   }
 }
 
-const ReactConnect = FlureeClient;
+const ReactConnect = FlureeConnect;
 
-export { ReactConnect, FlureeClient, FlureeProvider, flureeQL };
+export { ReactConnect, FlureeConnect, FlureeProvider, flureeQL };

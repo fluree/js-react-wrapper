@@ -159,15 +159,6 @@ function initializeConnection(conn) {
     return true;
 }
 
-
-/**
- * This callback is displayed as a global member.
- * @callback requestCallback
- * @param {Object} error
- * @param {string} [error.status] - Status code of error, roughly mimicks error 400/500 http status codes
- * @param {string} [error.message] - Error Message
- */
-
 /**
  * Create a new connection with settings object.
  * 
@@ -452,5 +443,14 @@ class FlureeClient {
         }
     }
 }
+
+/**
+ * This callback is displayed as a global member.
+ * @callback connErrorCallback
+ * @param {Object} error
+ * @param {string} [error.status] - Status code of error, roughly mimicks error 400/500 http status codes
+ * @param {string} [error.message] - Error Message
+ */
+
 
 export default FlureeClient;
