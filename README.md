@@ -1,6 +1,6 @@
 # @fluree/react-wrapper
 
-> Fluree wrapper for React apps
+> Fluree JavaScript DB wrapper for React apps
 
 [![NPM](https://img.shields.io/npm/v/@fluree/react-wrapper.svg)](https://www.npmjs.com/package/@fluree/react-wrapper) 
 
@@ -15,9 +15,9 @@ npm install --save @fluree/react-wrapper
 ```jsx
 import React, { Component } from 'react'
 
-import { ReactConnect, FlureeProvider, flureeQL } from '@fluree/js-react-wrapper'
+import { FlureeConnect, FlureeProvider, flureeQL } from '@fluree/js-react-wrapper'
 
-const flureeConnection = ReactConnect({
+const flureeConnection = new FlureeConnect({
   servers: "http://localhost:8090", // point to URL of running Fluree transactor or peer server
   ledger: "fluree/demo", // default ledger (database) on the server to use for this connection
   workerUrl: "path/to/flureeworker.js", // location of the fluree web worker javascript file
