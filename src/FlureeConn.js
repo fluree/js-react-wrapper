@@ -174,7 +174,7 @@ function initializeConnection(conn) {
  * @param {string} [config.password] - Set password for login when you want to automatically trigger the login with connection initialization.
  * @param {connErrorCallback} [config.errorCallback] - called with an object/map containing error information related to the connection
  */
-class FlureeClient {
+class FlureeConn {
     constructor(config) {
         // config settings
         this.servers = config.servers;
@@ -204,7 +204,6 @@ class FlureeClient {
     }
 
     processQueue() { // process any queries held in the queue
-        console.log("Processing queue: ", this.queue);
         const ids = Object.keys(this.queue);
         ids.forEach(id => {
             // queue is a list of ready to go worker messages, just process each of them
@@ -339,14 +338,14 @@ class FlureeClient {
     }
 
     // accepts component Id plus map of: query (query map), opts (options map), and update (update function to call when updates avail)
-    registerQuery(id, flureeQL, opts, cb, forceUpdate) {
-        this.callBacks[id] = cb;
-        this.queries[id] = { query: flureeQL, opts: opts };
+    registerQuery(id, flureeQL, cb, forceUpdate) {
+        this.callBacks[id] = cb; // set callback function for updates
+        this.queries[id] = flureeQL;
         const workerMsg = {
             conn: this.id,
             action: "registerQuery",
             ref: id,
-            params: [id, flureeQL, opts, forceUpdate]
+            params: [id, flureeQL, forceUpdate]
         };
 
         if (this.ready) {
@@ -431,16 +430,24 @@ class FlureeClient {
             const componentIds = Object.keys(this.queries);
             componentIds.forEach(id => {
                 const cb = this.callBacks[id];
-                var { query, opts } = this.queries[id];
+                var query = this.queries[id];
+                if (!query.opts) {
+                    query.opts = {};
+                }
 
                 // option {ignoreForceTime: true} will cause this query to not be affected by forceTime()
-                if (opts.ignoreForceTime != true) {
-                    opts.forceTime = t2;
+                if (!query.opts.ignoreForceTime) {
+                    query.opts.forceTime = t2;
                     // re-register query, will reissue it to webworker database
-                    this.registerQuery(id, query, opts, cb);
+                    this.registerQuery(id, query, cb);
                 }
             });
         }
+    }
+
+    // returns current forceTime value, if set.
+    getForceTime() {
+        return this.forceTimeTo;
     }
 }
 
@@ -453,4 +460,4 @@ class FlureeClient {
  */
 
 
-export default FlureeClient;
+export default FlureeConn;
