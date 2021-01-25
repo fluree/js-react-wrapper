@@ -1,6 +1,6 @@
 {
   "name": "@fluree/react-wrapper",
-  "version": "0.13.10",
+  "version": "0.14.0",
   "description": "Fluree wrapper for React apps",
   "author": "Fluree PBC",
   "license": "MIT",
@@ -34,11 +34,10 @@
     "hoist-non-react-statics": "^3.3.2"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
-    "prop-types": "^15.5.0"
+    "prop-types": "^15.5.0",
+    "react": "^17.0.1"
   },
   "devDependencies": {
-    "microbundle-crl": "^0.13.8",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
@@ -52,11 +51,12 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages": "^2.2.0",
+    "microbundle-crl": "^0.13.8",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-scripts": "^3.4.1"
   },
   "files": [
