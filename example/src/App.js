@@ -54,7 +54,7 @@ function AllGroups({ count }) {
 
 
 function MultiTest() {
-  const data  = flureeQuery({
+  const data = flureeQuery({
     groups: { select: ["*"], from: "group" },
     customers: { select: ["*"], from: "cRecord" }
   });
@@ -148,10 +148,10 @@ function PredicateItem4({ count }) {
 }
 
 function AllPredicates() {
-  var query = {select: ["_predicate/name"], from: "_predicate"}
+  var query = { select: ["_predicate/name"], from: "_predicate" }
   const data = flureeQuery(query)
 
-return (<div>predicates: {JSON.stringify(data.result)}</div>)
+  return (<div>predicates: {JSON.stringify(data.result)}</div>)
 
 }
 
