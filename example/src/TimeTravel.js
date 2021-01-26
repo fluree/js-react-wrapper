@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -45,19 +45,16 @@ function TimeTravel({ dateTime, onError, style }) {
   const [maxBlock, maxBlockTime, firstBlockTime] = loading || error ? defaultResult : result;
   const max = dateTime ? maxBlockTime : maxBlock;
   const min = dateTime ? firstBlockTime : 1;
-  const [sliderState, setSliderState] = useState({ changed: false, time: null });
+  const [sliderState, setSliderState] = useState(null);
   const [currentForceTime, forceTime] = useForceTime(); // currentForceTime will be null if not set
 
-  if (sliderState.changed) {
-    if (sliderState.time === max && currentForceTime) {
-      // (re)set to real-time if at max value and not already
-      setSliderState({ changed: false, time: null });
+  useEffect(() => {
+    if (sliderState === max && currentForceTime) {
       forceTime();
     } else {
-      // no-op if same as last forceTime value
-      forceTime(sliderState.time);
+      forceTime(sliderState)
     }
-  }
+  }, [sliderState]);
 
   if (error) {
     console.error(error);
@@ -66,13 +63,13 @@ function TimeTravel({ dateTime, onError, style }) {
 
   return error ? onError : (
     < Slider
-      value={sliderState.time || max}
+      value={sliderState || max}
       scale={x => dateTime ? new Date(x).toLocaleString() : x}
       min={min}
       max={max}
       style={{ ...styleObj, ...style }
       }
-      onChange={(event, value) => setSliderState({ changed: true, time: value })}
+      onChange={(event, value) => setSliderState(value)}
       ValueLabelComponent={ValueLabelComponent} />
   );
 }

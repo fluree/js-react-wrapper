@@ -161,8 +161,11 @@ const App = () => {
     <FlureeProvider conn={myconn}>
       <div>
         <TimeTravel></TimeTravel>
-        {/* <AllGroups /> */}
-        {/* <MyTest /> */}
+        <div>--------------------------------------</div>
+        <AllGroups />
+        <div>--------------------------------------</div>
+        <MyTest />
+        <div>--------------------------------------</div>
         {/* <PredicateItem5 /> */}
         {/* <AllInvoicesFluree></AllInvoicesFluree> */}
         {/* <PredicateItem2Fluree key="a" mypred="_user/username" />
@@ -170,8 +173,9 @@ const App = () => {
         <PredicateItem3Fluree key="c" mytest="_auth/id" /> 
         <PredicateItem3Fluree key="d" mytest="_auth/roles" />  */}
         {/* <ShowPredicatesFluree></ShowPredicatesFluree> */}
-        {/* <PredicateItem4 /> */}
-        <AllPredicates />
+        <PredicateItem4 />
+        <div>--------------------------------------</div>
+        {/* <AllPredicates /> */}
       </div>
     </FlureeProvider >
   );
