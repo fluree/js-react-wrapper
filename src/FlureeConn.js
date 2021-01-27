@@ -133,6 +133,7 @@ function initializeConnection(conn) {
     // initialize worker if not already done
     if (!fqlWorker) {
         fqlWorker = new Worker(conn.workerUrl);
+
         fqlWorker.onmessage = workerMessageHandler;
         fqlWorker.onerror = workerErrorHandler;
     }
@@ -182,7 +183,7 @@ class FlureeConn {
         this.log = config.log === true ? true : false;
         this.keepAlive = config.keepAlive === true ? true : false;
         this.compact = config.compact === false ? false : true;
-        this.workerUrl = config.workerUrl || 'flureeworker.js';
+        this.workerUrl = config.workerUrl;
         this.errorCallback = config.errorCallback ? config.errorCallback : (error) => console.log(error);
         // config auth-related options:
         this.token = config.token; // if logging in, token will be filled by successful login process
@@ -199,7 +200,7 @@ class FlureeConn {
         this.callBacks = {}; // map of ids to callbacks
         this.queries = {}; // map of ids to queries
         this.queue = {}; // queue queries until connection is ready
-
+        this.worker = fqlWorker;
         return initializeConnection(this);
     }
 
