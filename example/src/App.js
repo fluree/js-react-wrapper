@@ -9,9 +9,7 @@ const antonio = "c9cdec8fb328a823ddfbe37115ec448109d86bab594305c8066e7633e5b63ba
 const myconn = new FlureeConn({
   servers: "http://localhost:8090",
   ledger: "daas/t1",
-  // workerUrl: "@fluree/js-react-wrapper/flureeworker.js",
-  workerUrl: "/@fluree/js-react-wrapper/flureeworker.js",
-  // private: brian
+  workerUrl: "/flureeworker.js",
 });
 
 

@@ -1,6 +1,5 @@
 {
   "name": "@fluree/js-react-wrapper-example",
-  "homepage": "https://bplatz.github.io/@fluree/js-react-wrapper",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
