@@ -35,6 +35,7 @@ function reportFatalError(msg) {
 }
 
 // worker.onmessage handler
+
 function workerMessageHandler(e) {
     const msg = e.data;
     const conn = connections[msg.conn];
@@ -462,3 +463,4 @@ class FlureeConn {
 
 
 export default FlureeConn;
+export { fqlWorker, workerQueue };

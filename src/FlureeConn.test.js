@@ -1,17 +1,53 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-//import 'jsdom-global/register'
+import FlureeConn, { workerQueue } from './FlureeConn';
+import FlureeProvider from './FlureeProvider'
+import flureeQuery from './flureeQuery';
 import 'jsdom-worker'
-import FlureeConn from './FlureeConn';
+
+
+const groupsQuery = {
+    select: ["*"],
+    from: "group"
+}
+
+const returnVal = {}
+function TestComponent({ query }) {
+    Object.assign(returnVal, flureeQuery(query))
+    return null
+}
+
+test('worker queue starts empty', () => {
+    expect(workerQueue.length).toEqual(0);
+})
 
 test('it loads', () => {
     const myconn = new FlureeConn({ workerUrl: "" });
+    expect(workerQueue.length).toEqual(1);
 });
 
-test('it initializes the worker', () => {
-    const blob = new Blob([""]);
-    const url = window.URL.createObjectURL(blob);
-    const myconn = new FlureeConn({ workerUrl: url });
-    myconn.worker.postMessage("hello");
-    console.log(myconn.callBacks);
-});
+
+test('when the connection isnt ready, it queues messages when register query is called', () => {
+
+    const myconn = new FlureeConn({ workerUrl: '' });
+
+    render(<div><FlureeProvider conn={myconn}> <TestComponent query={groupsQuery} /> </FlureeProvider > </div>)
+    render(<div><FlureeProvider conn={myconn}> <TestComponent query={groupsQuery} /> </FlureeProvider > </div>)
+
+    expect(Object.keys(myconn.queries).length).toEqual(2)
+
+    //console.log(myconn)
+    //console.log(workerQueue)
+})
+
+test('it sends messages in the queue', () => {
+    const myconn = new FlureeConn({ workerUrl: '' });
+    render(<div><FlureeProvider conn={myconn}> <TestComponent query={groupsQuery} /> </FlureeProvider > </div>)
+    myconn.processQueue();
+    //console.log(myconn)
+    //console.log(workerQueue)
+
+    const registerQueryInWorkerQueue = workerQueue.find(e => e.action === 'registerQuery')
+    expect(registerQueryInWorkerQueue).toBeTruthy();
+
+})
