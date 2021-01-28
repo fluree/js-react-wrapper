@@ -11,6 +11,8 @@ npm install --save @fluree/react-wrapper
 ```
 
 ## Usage
+> flureeworker.js is included in the module src `./node_modules/@fluree/js-react-wrapper/src/flureeworker.js`
+> to be put in your public folder for the web worker to function
 
 ```jsx
 import React, { Component } from 'react'
@@ -20,7 +22,7 @@ import { FlureeConnect, FlureeProvider, flureeQL } from '@fluree/js-react-wrappe
 const flureeConnection = new FlureeConnect({
   servers: "http://localhost:8090", // point to URL of running Fluree transactor or peer server
   ledger: "fluree/demo", // default ledger (database) on the server to use for this connection
-  workerUrl: "path/to/flureeworker.js", // location of the fluree web worker javascript file
+  workerUrl: "/flureeworker.js", // location of the fluree web worker javascript file
 });
 
 const App = () => {
