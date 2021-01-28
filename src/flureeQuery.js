@@ -47,8 +47,10 @@ function flureeQuery(query, opts) {
         get: getResult()
     });
 
-     // imperfect but fast comparison values for useEffect() to determine if we need to re-run query - false positive is OK
+    // imperfect but fast comparison values for useEffect() to determine if we need to re-run query - false positive is OK
     const useEffectCmp = [JSON.stringify(query)]
+
+    console.log("useEffectCmp", useEffectCmp);
 
     useEffect(() => {
         const id = nextId(); // id is used to track each query per component. When queries are upated, new ids are issued and old ids are unsubscribed

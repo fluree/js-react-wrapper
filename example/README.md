@@ -28,11 +28,11 @@ You can run `npm install` and then `npm start` to test your package.
 ```
 [
   {
-    "_id": 369435906932737,
+    "_id": "group",
     "group/name": "Test Group 2"
   },
   {
-    "_id": 369435906932736,
+    "_id": "group",
     "group/name": "Test Group 1"
   }
 ]

@@ -163,17 +163,17 @@ const App = () => {
         <AllGroups />
         <div>--------------------------------------</div>
         <MyTest />
-        <div>--------------------------------------</div>
+        <div>--------Multi Test----------------</div>
+        <MultiTest />
         {/* <PredicateItem5 /> */}
         {/* <AllInvoicesFluree></AllInvoicesFluree> */}
         {/* <PredicateItem2Fluree key="a" mypred="_user/username" />
         <PredicateItem2Fluree key="b" mypred="_user/auth" />
         <PredicateItem3Fluree key="c" mytest="_auth/id" /> 
         <PredicateItem3Fluree key="d" mytest="_auth/roles" />  */}
-        {/* <ShowPredicatesFluree></ShowPredicatesFluree> */}
         <PredicateItem4 />
         <div>--------------------------------------</div>
-        {/* <AllPredicates /> */}
+        <AllPredicates />
       </div>
     </FlureeProvider >
   );

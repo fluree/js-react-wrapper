@@ -3,7 +3,7 @@
 // used to relay messages from web worker back to the respective connection.
 var connections = {}
 
-let SHOULD_LOG = true;
+let SHOULD_LOG = false;
 
 // for async calls to the worker, maintains the callback to execute with the result, when applicable
 var callbackRegistry = {};
