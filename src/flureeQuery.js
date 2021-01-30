@@ -25,6 +25,7 @@ function getResult(result) {
 
 function updateReducer(state, update) {
     var newState = Object.assign({}, state, update);
+    console.warn("flureeQuery#newState", newState)
     if (newState.status === "loaded")
         newState.loading = false;
     return newState;

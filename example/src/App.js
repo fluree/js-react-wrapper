@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlureeConn, FlureeProvider, flureeQuery } from '@fluree/js-react-wrapper'
-import TimeTravel from './TimeTravel'
+//import TimeTravel from './TimeTravel'
 
 const scott = "a603e772faec02056d4ec3318187487d62ec46647c0cba7320c7f2a79bed2615";
 const brian = "509a01fe94a32466d7d3ad378297307f897a7d385a219d79725994ce06041896";
@@ -22,7 +22,7 @@ function AllGroups({ count }) {
   // const query = (count < 2) ? null : groupsQuery;
   const query = groupsQuery;
   const data = flureeQuery(query);
-  console.warn("Data: ", data)
+  console.warn("App#Data: ", data)
   const { result, loading } = data;
   if (loading) {
     return (<div>Loading...</div>);
@@ -158,22 +158,17 @@ const App = () => {
   return (
     <FlureeProvider conn={myconn}>
       <div>
-        <TimeTravel></TimeTravel>
+        {/*<TimeTravel></TimeTravel> */}
         <div>--------------------------------------</div>
         <AllGroups />
         <div>--------------------------------------</div>
-        <MyTest />
-        <div>--------Multi Test----------------</div>
-        <MultiTest />
-        {/* <PredicateItem5 /> */}
-        {/* <AllInvoicesFluree></AllInvoicesFluree> */}
-        {/* <PredicateItem2Fluree key="a" mypred="_user/username" />
-        <PredicateItem2Fluree key="b" mypred="_user/auth" />
-        <PredicateItem3Fluree key="c" mytest="_auth/id" /> 
-        <PredicateItem3Fluree key="d" mytest="_auth/roles" />  */}
+        {/* <MyTest /> */}
+        {/* <div>--------Multi Test----------------</div>
+         <MultiTest /> */}
+        {/* <div>------------PredicateItem4-------------------</div>
         <PredicateItem4 />
-        <div>--------------------------------------</div>
-        <AllPredicates />
+        <div>------------AllPredicates----------</div>
+        <AllPredicates /> */}
       </div>
     </FlureeProvider >
   );
