@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
-import { flureeQuery, useForceTime } from '@fluree/js-react-wrapper'
+import { FlureeQuery, useForceTime } from '@fluree/js-react-wrapper'
 
 const styleObj = {
   width: 300,
@@ -40,7 +40,7 @@ const timeTravelQuery = {
 };
 
 function TimeTravel({ dateTime, onError, style }) {
-  const { result, loading, error } = flureeQuery(timeTravelQuery);
+  const { result, loading, error } = useFlureeQuery(timeTravelQuery);
   const defaultResult = [2, new Date().valueOf(), 1451624400000];
   const [maxBlock, maxBlockTime, firstBlockTime] = loading || error ? defaultResult : result;
   const max = dateTime ? maxBlockTime : maxBlock;

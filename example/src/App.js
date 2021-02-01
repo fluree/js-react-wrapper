@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlureeConn, FlureeProvider, flureeQuery } from '@fluree/js-react-wrapper'
+import { FlureeConn, FlureeProvider, useFlureeQuery } from '@fluree/js-react-wrapper'
 //import TimeTravel from './TimeTravel'
 
 const scott = "a603e772faec02056d4ec3318187487d62ec46647c0cba7320c7f2a79bed2615";
@@ -21,7 +21,7 @@ const groupsQuery = {
 function AllGroups({ count }) {
   // const query = (count < 2) ? null : groupsQuery;
   const query = groupsQuery;
-  const data = flureeQuery(query);
+  const data = useFlureeQuery(query);
   console.warn("App#Data: ", data)
   const { result, loading } = data;
   if (loading) {
@@ -52,7 +52,7 @@ function AllGroups({ count }) {
 
 
 function MultiTest() {
-  const data = flureeQuery({
+  const data = useFlureeQuery({
     groups: { select: ["*"], from: "group" },
     customers: { select: ["*"], from: "cRecord" }
   });
@@ -136,7 +136,7 @@ function PredicateItem4({ count }) {
   query.vars["?mypred"] = predName;
 
 
-  const data = flureeQuery(query, {})
+  const data = useFlureeQuery(query, {})
 
   const predicateName = data.result;
   console.log("PredicateItem4: ", data);
@@ -147,7 +147,7 @@ function PredicateItem4({ count }) {
 
 function AllPredicates() {
   var query = { select: ["_predicate/name"], from: "_predicate" }
-  const data = flureeQuery(query)
+  const data = useFlureeQuery(query)
 
   return (<div>predicates: {JSON.stringify(data.result)}</div>)
 

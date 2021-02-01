@@ -25,13 +25,13 @@ function getResult(result) {
 
 function updateReducer(state, update) {
     var newState = Object.assign({}, state, update);
-    console.warn("flureeQuery#newState", newState)
+    console.warn("useFlureeQuery#newState", newState)
     if (newState.status === "loaded")
         newState.loading = false;
     return newState;
 }
 
-function flureeQuery(query, opts) {
+function useFlureeQuery(query, opts) {
     const { conn } = useContext(ConnContext);
 
     // if any opts exist, make sure they are merged
@@ -65,4 +65,4 @@ function flureeQuery(query, opts) {
     return response;
 }
 
-export default flureeQuery;
+export default useFlureeQuery;

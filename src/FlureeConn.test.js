@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import FlureeConn, { workerQueue } from './FlureeConn'
 import FlureeProvider from './FlureeProvider'
-import flureeQuery from './flureeQuery'
+import useFlureeQuery from './FlureeQuery'
 import 'jsdom-worker'
 
 
@@ -13,7 +13,7 @@ const groupsQuery = {
 
 const returnVal = {}
 function TestComponent({ query }) {
-    Object.assign(returnVal, flureeQuery(query))
+    Object.assign(returnVal, useFlureeQuery(query))
     return null
 }
 
