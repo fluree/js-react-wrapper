@@ -163,8 +163,8 @@ const App = () => {
         <AllGroups />
         <div>--------------------------------------</div>
         {/* <MyTest /> */}
-        {/* <div>--------Multi Test----------------</div>
-         <MultiTest /> */}
+        <div>--------Multi Test----------------</div>
+        <MultiTest />
         {/* <div>------------PredicateItem4-------------------</div>
         <PredicateItem4 />
         <div>------------AllPredicates----------</div>
