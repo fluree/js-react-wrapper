@@ -1,6 +1,6 @@
 import React from 'react';
-import { FlureeConn, FlureeProvider, useFlureeQuery } from '@fluree/js-react-wrapper'
-//import TimeTravel from './TimeTravel'
+import { FlureeConn, FlureeProvider, useFlureeQuery, FlureeTransact } from '@fluree/js-react-wrapper'
+import TimeTravel from './TimeTravel'
 
 const scott = "a603e772faec02056d4ec3318187487d62ec46647c0cba7320c7f2a79bed2615";
 const brian = "509a01fe94a32466d7d3ad378297307f897a7d385a219d79725994ce06041896";
@@ -71,14 +71,24 @@ function MultiTest() {
 }
 
 
+function addGroup(groupNumber) {
+  const transaction = {
+    _id: "group",
+    'group/name': `Test Group ${groupNumber.toString()}`
+  }
+  myconn.transact(transaction, console.log);
+}
+
+
 function MyTest() {
-  const [count, updateCount] = React.useState(0);
+  const randomNumber = Math.floor(Math.random() * 100000);
+
+
 
   return (
+
     <div>
-      <div>Count: {count}</div>
-      <div><button onClick={() => updateCount(count + 1)}></button></div>
-      <AllGroups count={count} />
+      <div><button onClick={() => addGroup(randomNumber)}>Generate Random Group {randomNumber.toString()}</button></div>
       {/* <PredicateItem4 count={count} />
       <MultiTest></MultiTest> */}
     </div>
@@ -158,11 +168,11 @@ const App = () => {
   return (
     <FlureeProvider conn={myconn}>
       <div>
-        {/*<TimeTravel></TimeTravel> */}
+        <TimeTravel></TimeTravel>
         <div>--------------------------------------</div>
         <AllGroups />
-        <div>--------------------------------------</div>
-        {/* <MyTest /> */}
+        <div>-----------My Test---------------------</div>
+        <MyTest />
         <div>--------Multi Test----------------</div>
         <MultiTest />
         {/* <div>------------PredicateItem4-------------------</div>
