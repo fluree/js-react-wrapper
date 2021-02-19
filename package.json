@@ -1,6 +1,6 @@
 {
   "name": "@fluree/react-wrapper",
-  "version": "0.13.10",
+  "version": "0.14.0",
   "description": "Fluree wrapper for React apps",
   "author": "Fluree PBC",
   "license": "MIT",
@@ -18,30 +18,37 @@
   "engines": {
     "node": ">=10"
   },
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extentions": "js, jsx"
+    }
+  },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepublish": "run-s build",
-    "test": "run-s test:unit test:lint test:build",
+    "test": "run-s test:unit test:build",
     "test:build": "run-s build",
-    "test:lint": "eslint .",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
+    "deploy": "gh-pages -d example/build",
+    "watch": "npm-watch"
   },
   "dependencies": {
     "hoist-non-react-statics": "^3.3.2"
   },
   "peerDependencies": {
-    "react": "^16.0.0",
-    "prop-types": "^15.5.0"
+    "prop-types": "^15.5.0",
+    "react": "^17.0.1"
   },
   "devDependencies": {
-    "microbundle-crl": "^0.13.8",
+    "@testing-library/react": "^11.2.3",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
-    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-config-standard-react": "^9.2.0",
@@ -52,11 +59,17 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages": "^2.2.0",
+    "jest": "^24.9.0",
+    "jsdom": "^11.12.0",
+    "jsdom-global": "^3.0.2",
+    "jsdom-worker": "^0.2.1",
+    "microbundle-crl": "^0.13.8",
     "npm-run-all": "^4.1.5",
+    "npm-watch": "^0.7.0",
     "prettier": "^1.19.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "prop-types": "^15.7.2",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-scripts": "^3.4.1"
   },
   "files": [

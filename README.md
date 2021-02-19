@@ -2,7 +2,7 @@
 
 > Fluree JavaScript DB wrapper for React apps
 
-[![NPM](https://img.shields.io/npm/v/@fluree/react-wrapper.svg)](https://www.npmjs.com/package/@fluree/react-wrapper) 
+[![NPM](https://img.shields.io/npm/v/@fluree/react-wrapper.svg)](https://www.npmjs.com/package/@fluree/react-wrapper)
 
 ## Install
 
@@ -12,15 +12,22 @@ npm install --save @fluree/react-wrapper
 
 ## Usage
 
+> flureeworker.js is included in the module src `./node_modules/@fluree/js-react-wrapper/src/flureeworker.js`
+> to be put in your public folder for the web worker to function
+
 ```jsx
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-import { FlureeConnect, FlureeProvider, flureeQL } from '@fluree/js-react-wrapper'
+import {
+  FlureeConnect,
+  FlureeProvider,
+  flureeQL
+} from "@fluree/js-react-wrapper";
 
-const flureeConnection = new FlureeConnect({
+const flureeConnection = new FlureeConn({
   servers: "http://localhost:8090", // point to URL of running Fluree transactor or peer server
   ledger: "fluree/demo", // default ledger (database) on the server to use for this connection
-  workerUrl: "path/to/flureeworker.js", // location of the fluree web worker javascript file
+  workerUrl: "/flureeworker.js" // location of the fluree web worker javascript file
 });
 
 const App = () => {
@@ -30,28 +37,35 @@ const App = () => {
         <p>Example of rendering a React componet with Fluree data:</p>
         <ShowPredicatesFluree></ShowPredicatesFluree>
       </div>
-    </FlureeProvider >
+    </FlureeProvider>
   );
-}
+};
 
 // PredicateItem is a standard React component that will display a single predicate item from the db's schema
 function PredicateItem({ predicate }) {
   return (
     <p key={predicate.name}>
       <b>{predicate.name}</b> {predicate.doc}
-      <br />type: {predicate.type}
-      <br />unique?: {predicate.unique === true ? "true" : "false"}
-      <br />index?: {predicate.index === true ? "true" : "false"}
-      <br />multi-cardinality?: {predicate.multi === true ? "true" : "false"}
-      <br />component?: {predicate.component === true ? "true" : "false"}
+      <br />
+      type: {predicate.type}
+      <br />
+      unique?: {predicate.unique === true ? "true" : "false"}
+      <br />
+      index?: {predicate.index === true ? "true" : "false"}
+      <br />
+      multi-cardinality?: {predicate.multi === true ? "true" : "false"}
+      <br />
+      component?: {predicate.component === true ? "true" : "false"}
     </p>
-  )
+  );
 }
 
 // ShowPredicates is a standard React component that will display a list of Predicates passed in
 // as the React prop of data.result (Fluree injects all query data into a component's 'data' prop)
 function ShowPredicates({ data }) {
-  const predicateNames = data.result.map(predicate => <PredicateItem predicate={predicate} />);
+  const predicateNames = data.result.map(predicate => (
+    <PredicateItem predicate={predicate} />
+  ));
   return (
     <div>
       <p>Predicate Names are:</p>
@@ -64,16 +78,12 @@ function ShowPredicates({ data }) {
 // and results as the 'data' prop. Render this component instead of ShowPredicates. This will also
 // make ShowPredicates "real-time", if there are any database updates that would affect this
 // component's query results it will automatically re-render
-const ShowPredicatesFluree = flureeQL(
-  {
-    select: ["*"],
-    from: "_predicate"
-  }
-)(ShowPredicates);
-
+const ShowPredicatesFluree = flureeQL({
+  select: ["*"],
+  from: "_predicate"
+})(ShowPredicates);
 
 export default App;
-
 ```
 
 ## Query types
@@ -84,47 +94,42 @@ Queries passed to flureeQL can either be:
 2. A query with variables that can be brought in dynamically by the mounted component
 3. A function that is passed the component's props and context and must return a valid query
 
-
 ### Standard queries
 
 ```jsx
-
 // standard React component (knows nothing of Fluree)
 function FavoriteColor({ data }) {
   // Fluree injects `data` object into props, query result is at data.result
   return (
-    <p>Favorite color for {data.result.username} is: {data.result.favoriteColor}</p>
+    <p>
+      Favorite color for {data.result.username} is: {data.result.favoriteColor}
+    </p>
   );
 }
 
 // wrap standard React component with Fluree query, results will be injected
 // 'basic' style query shown below
-const FavoriteColorFluree = flureeQL(
-  {
-    selectOne: ["username", "favoriteColor"],
-    from: ["_user/username", "bob@example.com"]
-  }
-)(FavoriteColor);
+const FavoriteColorFluree = flureeQL({
+  selectOne: ["username", "favoriteColor"],
+  from: ["_user/username", "bob@example.com"]
+})(FavoriteColor);
 
 // identical query as above, but with 'analytical' query style
-const FavoriteColorFlureeAlt = flureeQL(
-  {
-    selectOne: {"?s": ["username", "favoriteColor"]},
-    where: [["?s", "_user/username", "bob@example.com"]]
-  }
-)(FavoriteColor);
-
+const FavoriteColorFlureeAlt = flureeQL({
+  selectOne: { "?s": ["username", "favoriteColor"] },
+  where: [["?s", "_user/username", "bob@example.com"]]
+})(FavoriteColor);
 ```
 
 ### Queries with variables
 
-Queries that will be used in multiple contexts should use 
-[query variables](https://docs.flur.ee/docs/query/analytical-query#variables), 
+Queries that will be used in multiple contexts should use
+[query variables](https://docs.flur.ee/docs/query/analytical-query#variables),
 allowing the query to be reusable (this also makes query parsing slightly more efficient).
 
 ```jsx
 
-// for any query vars that are null, The React component's props will 
+// for any query vars that are null, The React component's props will
 // be examined to see if there is a property with the same name as the missing
 // var (minus the leading '?') and it will be substituted.
 const FavoriteColorFluree = flureeQL(
@@ -151,7 +156,7 @@ function ParentComponent() {
 ### Queries using a function
 
 The third query alternative is to use a function to return a query instead of specifying it directly.
-The function will be called with two arguments, the React props and context 
+The function will be called with two arguments, the React props and context
 (just like the constructor function of a React.Component).
 
 ```jsx
@@ -178,7 +183,6 @@ function ParentComponent() {
   );
 }
 ```
-
 
 ## License
 

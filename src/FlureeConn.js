@@ -35,6 +35,7 @@ function reportFatalError(msg) {
 }
 
 // worker.onmessage handler
+
 function workerMessageHandler(e) {
     const msg = e.data;
     const conn = connections[msg.conn];
@@ -133,6 +134,7 @@ function initializeConnection(conn) {
     // initialize worker if not already done
     if (!fqlWorker) {
         fqlWorker = new Worker(conn.workerUrl);
+
         fqlWorker.onmessage = workerMessageHandler;
         fqlWorker.onerror = workerErrorHandler;
     }
@@ -174,7 +176,7 @@ function initializeConnection(conn) {
  * @param {string} [config.password] - Set password for login when you want to automatically trigger the login with connection initialization.
  * @param {connErrorCallback} [config.errorCallback] - called with an object/map containing error information related to the connection
  */
-class FlureeClient {
+class FlureeConn {
     constructor(config) {
         // config settings
         this.servers = config.servers;
@@ -182,7 +184,7 @@ class FlureeClient {
         this.log = config.log === true ? true : false;
         this.keepAlive = config.keepAlive === true ? true : false;
         this.compact = config.compact === false ? false : true;
-        this.workerUrl = config.workerUrl || 'flureeworker.js';
+        this.workerUrl = config.workerUrl;
         this.errorCallback = config.errorCallback ? config.errorCallback : (error) => console.log(error);
         // config auth-related options:
         this.token = config.token; // if logging in, token will be filled by successful login process
@@ -199,12 +201,11 @@ class FlureeClient {
         this.callBacks = {}; // map of ids to callbacks
         this.queries = {}; // map of ids to queries
         this.queue = {}; // queue queries until connection is ready
-
+        this.worker = fqlWorker;
         return initializeConnection(this);
     }
 
     processQueue() { // process any queries held in the queue
-        console.log("Processing queue: ", this.queue);
         const ids = Object.keys(this.queue);
         ids.forEach(id => {
             // queue is a list of ready to go worker messages, just process each of them
@@ -292,6 +293,7 @@ class FlureeClient {
     }
 
     transact(transaction, cb) {
+        console.warn("Transaction", transaction)
         const tempRef = nextId();
         const workerMsg = {
             conn: this.id,
@@ -299,10 +301,12 @@ class FlureeClient {
             ref: tempRef,
             params: [transaction]
         };
+        console.warn("Worker Message", workerMsg);
         if (cb)
             this.callBacks[tempRef] = cb;
 
         if (this.ready) {
+            console.warn("messaging worker");
             return messageWorker(workerMsg);
         } else {
             this.queue[ref] = workerMsg;
@@ -339,14 +343,14 @@ class FlureeClient {
     }
 
     // accepts component Id plus map of: query (query map), opts (options map), and update (update function to call when updates avail)
-    registerQuery(id, flureeQL, opts, cb, forceUpdate) {
-        this.callBacks[id] = cb;
-        this.queries[id] = { query: flureeQL, opts: opts };
+    registerQuery(id, flureeQL, cb, forceUpdate) {
+        this.callBacks[id] = cb; // set callback function for updates
+        this.queries[id] = flureeQL;
         const workerMsg = {
             conn: this.id,
             action: "registerQuery",
             ref: id,
-            params: [id, flureeQL, opts, forceUpdate]
+            params: [id, flureeQL, forceUpdate]
         };
 
         if (this.ready) {
@@ -431,16 +435,24 @@ class FlureeClient {
             const componentIds = Object.keys(this.queries);
             componentIds.forEach(id => {
                 const cb = this.callBacks[id];
-                var { query, opts } = this.queries[id];
+                var query = this.queries[id];
+                if (!query.opts) {
+                    query.opts = {};
+                }
 
                 // option {ignoreForceTime: true} will cause this query to not be affected by forceTime()
-                if (opts.ignoreForceTime != true) {
-                    opts.forceTime = t2;
+                if (!query.opts.ignoreForceTime) {
+                    query.opts.forceTime = t2;
                     // re-register query, will reissue it to webworker database
-                    this.registerQuery(id, query, opts, cb);
+                    this.registerQuery(id, query, cb);
                 }
             });
         }
+    }
+
+    // returns current forceTime value, if set.
+    getForceTime() {
+        return this.forceTimeTo;
     }
 }
 
@@ -453,4 +465,5 @@ class FlureeClient {
  */
 
 
-export default FlureeClient;
+export default FlureeConn;
+export { fqlWorker, workerQueue };
