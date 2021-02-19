@@ -25,7 +25,6 @@ function getResult(result) {
 
 function updateReducer(state, update) {
     var newState = Object.assign({}, state, update);
-    console.warn("useFlureeQuery#newState", newState)
     if (newState.status === "loaded")
         newState.loading = false;
     return newState;
@@ -50,8 +49,6 @@ function useFlureeQuery(query, opts) {
 
     // imperfect but fast comparison values for useEffect() to determine if we need to re-run query - false positive is OK
     const useEffectCmp = [JSON.stringify(query)]
-
-    console.log("useEffectCmp", useEffectCmp);
 
     useEffect(() => {
         const id = nextId(); // id is used to track each query per component. When queries are upated, new ids are issued and old ids are unsubscribed

@@ -8,7 +8,7 @@ const antonio = "c9cdec8fb328a823ddfbe37115ec448109d86bab594305c8066e7633e5b63ba
 
 const myconn = new FlureeConn({
   servers: "http://localhost:8090",
-  ledger: "daas/t1",
+  ledger: "dbaas/t1",
   workerUrl: "/flureeworker.js",
 });
 
@@ -22,7 +22,6 @@ function AllGroups({ count }) {
   // const query = (count < 2) ? null : groupsQuery;
   const query = groupsQuery;
   const data = useFlureeQuery(query);
-  console.warn("App#Data: ", data)
   const { result, loading } = data;
   if (loading) {
     return (<div>Loading...</div>);
@@ -57,7 +56,6 @@ function MultiTest() {
     customers: { select: ["*"], from: "cRecord" }
   });
 
-  console.log("MULTI DATA: ", data);
   const { result } = data;
 
 
@@ -139,7 +137,6 @@ function PredicateItem4({ count }) {
   const data = useFlureeQuery(query, {})
 
   const predicateName = data.result;
-  console.log("PredicateItem4: ", data);
   return (
     <p>{predicateName}</p>
   )

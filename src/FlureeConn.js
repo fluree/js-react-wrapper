@@ -126,7 +126,6 @@ function messageWorker(obj) {
     } else {
         workerQueue.push(obj);
     }
-    console.warn("Worker Queue", workerQueue);
 
     return true;
 }
@@ -251,7 +250,6 @@ class FlureeConn {
 
     // called by the message worker handler whenever there is an update related to a registered query
     handleQueryUpdate(message) {
-        console.warn("FlureeConn#handleQueryUpdate", message)
         const { ref, data } = message;
         const cb = this.callBacks[ref];
         if (cb) {
