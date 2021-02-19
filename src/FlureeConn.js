@@ -126,6 +126,7 @@ function messageWorker(obj) {
     } else {
         workerQueue.push(obj);
     }
+    console.warn("Worker Queue", workerQueue);
 
     return true;
 }
@@ -294,6 +295,7 @@ class FlureeConn {
     }
 
     transact(transaction, cb) {
+        console.warn("Transaction", transaction)
         const tempRef = nextId();
         const workerMsg = {
             conn: this.id,
@@ -301,10 +303,12 @@ class FlureeConn {
             ref: tempRef,
             params: [transaction]
         };
+        console.warn("Worker Message", workerMsg);
         if (cb)
             this.callBacks[tempRef] = cb;
 
         if (this.ready) {
+            console.warn("messaging worker");
             return messageWorker(workerMsg);
         } else {
             this.queue[ref] = workerMsg;

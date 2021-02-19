@@ -5,25 +5,39 @@ It is linked to the @fluree/js-react-wrapper package in the parent directory for
 You can run `npm install` and then `npm start` to test your package.
 
 - create a `daas/t1` ledger
-- create a collection
+- create  collections
 ```
 [{
  "_id": "_collection",
  "name": "group",
  "doc": "A collection to hold all the groups",
  "version": 1 
+},
+
+{
+ "_id": "_collection",
+ "name": "cRecord",
+ "doc": "A collection to hold all the records",
+ "version": 1 
 }]
 ```
-- create a predicate
+- create  predicates
 ```
-[{
+[
+  {
     "_id": "_predicate",
     "name": "group/name",
     "type": "string"
-}]
+},
+  {
+    "_id": "_predicate",
+    "name": "cRecord/name",
+    "type": "string"
+}
+]
 ```
 
-- create some groups
+- create some groups and records
 
 ```
 [
@@ -34,6 +48,14 @@ You can run `npm install` and then `npm start` to test your package.
   {
     "_id": "group",
     "group/name": "Test Group 1"
+  },
+  {
+    "_id": "cRecord",
+    "cRecord/name": "Test Record 2"
+  },
+  {
+    "_id": "cRecord",
+    "cRecord/name": "Test Record 1"
   }
 ]
 ```

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Slider from '@material-ui/core/Slider';
 import Tooltip from '@material-ui/core/Tooltip';
-import { FlureeQuery, useForceTime } from '@fluree/js-react-wrapper'
+import { useFlureeQuery, useForceTime } from '@fluree/js-react-wrapper'
 
 const styleObj = {
   width: 300,
