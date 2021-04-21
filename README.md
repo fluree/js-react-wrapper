@@ -21,7 +21,7 @@ import React, { Component } from "react";
 import {
   FlureeConnect,
   FlureeProvider,
-  flureeQL
+  useFlureeQuery,
 } from "@fluree/js-react-wrapper";
 
 const flureeConnection = new FlureeConn({

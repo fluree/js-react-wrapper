@@ -1,6 +1,6 @@
 {
   "name": "@fluree/react-wrapper",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Fluree wrapper for React apps",
   "author": "Fluree PBC",
   "license": "MIT",
@@ -73,6 +73,7 @@
     "react-scripts": "^3.4.1"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ]
 }
