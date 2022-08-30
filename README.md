@@ -21,7 +21,7 @@ import React, { Component } from "react";
 import {
   FlureeConnect,
   FlureeProvider,
-  flureeQL
+  useFlureeQuery
 } from "@fluree/js-react-wrapper";
 
 const flureeConnection = new FlureeConn({
@@ -62,7 +62,10 @@ function PredicateItem({ predicate }) {
 
 // ShowPredicates is a standard React component that will display a list of Predicates passed in
 // as the React prop of data.result (Fluree injects all query data into a component's 'data' prop)
-function ShowPredicates({ data }) {
+function ShowPredicates() {
+  // use the `useFlureeQuery` react hook fetch to the data.
+  const data = useFlureeQuery({ select: ["*"], from: "_predicate" });
+
   const predicateNames = data.result.map(predicate => (
     <PredicateItem predicate={predicate} />
   ));
@@ -74,21 +77,12 @@ function ShowPredicates({ data }) {
   );
 }
 
-// wrap the ShowPredicates standard React component with a Fluree query, it will inject the status
-// and results as the 'data' prop. Render this component instead of ShowPredicates. This will also
-// make ShowPredicates "real-time", if there are any database updates that would affect this
-// component's query results it will automatically re-render
-const ShowPredicatesFluree = flureeQL({
-  select: ["*"],
-  from: "_predicate"
-})(ShowPredicates);
-
 export default App;
 ```
 
 ## Query types
 
-Queries passed to flureeQL can either be:
+Queries passed to the `useFlureeQuery` hook can either be:
 
 1. A standard query as in the example above
 2. A query with variables that can be brought in dynamically by the mounted component
@@ -98,27 +92,18 @@ Queries passed to flureeQL can either be:
 
 ```jsx
 // standard React component (knows nothing of Fluree)
-function FavoriteColor({ data }) {
-  // Fluree injects `data` object into props, query result is at data.result
+function FavoriteColor() {
+  const data = useFlureeQuery({
+    selectOne: ["username", "favoriteColor"],
+    from: ["_user/username", "bob@example.com"]
+  });
+
   return (
     <p>
       Favorite color for {data.result.username} is: {data.result.favoriteColor}
     </p>
   );
 }
-
-// wrap standard React component with Fluree query, results will be injected
-// 'basic' style query shown below
-const FavoriteColorFluree = flureeQL({
-  selectOne: ["username", "favoriteColor"],
-  from: ["_user/username", "bob@example.com"]
-})(FavoriteColor);
-
-// identical query as above, but with 'analytical' query style
-const FavoriteColorFlureeAlt = flureeQL({
-  selectOne: { "?s": ["username", "favoriteColor"] },
-  where: [["?s", "_user/username", "bob@example.com"]]
-})(FavoriteColor);
 ```
 
 ### Queries with variables
@@ -129,25 +114,28 @@ allowing the query to be reusable (this also makes query parsing slightly more e
 
 ```jsx
 
-// for any query vars that are null, The React component's props will
-// be examined to see if there is a property with the same name as the missing
-// var (minus the leading '?') and it will be substituted.
-const FavoriteColorFluree = flureeQL(
-  {
+function FavoriteColor({ username }) {
+  const data = useFlureeQuery({
     selectOne: {"?s": ["username", "favoriteColor"]},
     where: [["?s", "_user/username", "?username"]], // ?username here is a query variable
-    vars: {"?username": null} // note ?username is null, will look at React props for presence of 'username'
-  }
-)(FavoriteColor);
+    vars: {"?username": username }
+  });
+
+  return (
+    <p>
+      Favorite color for {data.result.username} is: {data.result.favoriteColor}
+    </p>
+  );
+}
 
 // this parent component will display our Fluree-enabled component
 function ParentComponent() {
   return (
     <div>
       <p>Two users, same reusable component with different username property:</p>
-      <FavoriteColorFluree username="bob@example.com"/>
-      <FavoriteColorFluree username="alice@example.com"/>
-    <div>
+      <FavoriteColor username="bob@example.com"/>
+      <FavoriteColor username="alice@example.com"/>
+    </div>
   );
 }
 
@@ -177,9 +165,9 @@ function ParentComponent() {
   return (
     <div>
       <p>Two users, same reusable component with different username property:</p>
-      <FavoriteColorFluree username="bob@example.com"/>
-      <FavoriteColorFluree username="alice@example.com"/>
-    <div>
+      <FavoriteColor username="bob@example.com"/>
+      <FavoriteColor username="alice@example.com"/>
+    </div>
   );
 }
 ```
